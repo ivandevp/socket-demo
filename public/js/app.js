@@ -1,21 +1,17 @@
 var socket = io();
 
-var cargarPagina = function () {
-	var boton = document.getElementById("prueba");
-	boton.addEventListener("click", enviarMensaje);
-};
+$(document).ready(function() {
+	$("#login").submit(function(evt) {
+		evt.preventDefault();
+		var data = {
+			name: $(this).find("input").val(),
+			status: "Connecting..."
+		};
+		socket.emit("conectando", data);
+	});
 
-var enviarMensaje = function () {
-	var mensaje = "Hola, ayer ganó Perú! -.-";
-	socket.emit("saludo", mensaje);
-};
-
-socket.on("respuesta", function (respuesta) {
-	alert(respuesta);
 });
 
-socket.on("respuesta general", function(mensaje) {
-	console.log(mensaje);
+socket.on("conectado", function (usuario) {
+	$("#usuarios").append(usuario.name + "<br>");
 });
-
-window.addEventListener("load", cargarPagina);
